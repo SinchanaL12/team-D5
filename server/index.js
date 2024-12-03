@@ -13,7 +13,7 @@ app.use(cors())
 const PORT = process.env.PORT || 3001
 
 //console.log(process.env.MongoDB_URL)
-mongoose.connect(process.env.MongoDB_URL)
+mongoose.connect('mongodb+srv://root:root1@cluster0.dkqn9.mongodb.net/')
 
 app.post('/insert', async (req,res)=>{
     const foodName = req.body.foodName
