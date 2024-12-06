@@ -1,66 +1,83 @@
 import './App.css';
-import React,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 
 function App() {
+  const [ticketTitle, setTicketTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+  const [newTicketTitle, setNewTicketTitle] = useState("");
+  const [ticketList, setTicketList] = useState([]);
 
-    const [foodName,setFoodName] = useState("");
-    const [days,setDays] = useState(0);
-    const [newFoodName, setNewFoodName] = useState("");
-    const [foodList, setFoodList] = useState([]);
+  // Fetch the ticket list on page load
+  useEffect(() => {
+    Axios.get("http://localhost:3001/read").then((response) => {
+      setTicketList(response.data);
+    });
+  }, [ticketList]);
 
-    useEffect(() => {
-      Axios.get("http://localhost:3001/read").then((response)=> {
-        setFoodList(response.data)
-      })
-    },[foodList])
+  // Add new ticket
+  const addTicket = () => {
+    Axios.post("http://localhost:3001/insert", {
+      ticketTitle,
+      description,
+      status,
+    });
+  };
 
-    const addToList = () => {
-      Axios.post("http://localhost:3001/insert", {
-        foodName:foodName, 
-        days:days
-      })
-    }
+  // Update ticket
+  const updateTicket = (id) => {
+    Axios.put("http://localhost:3001/update", {
+      id,
+      newTicketTitle,
+    });
+  };
 
-    const updateFood = (id) => {
-      Axios.put("http://localhost:3001/update",{
-        id: id,
-        newFoodName: newFoodName
-      })
-    }
-
-    const deleteFood = (id) => {
-      Axios.delete(`http://localhost:3001/delete/${id}`,{
-        id: id,
-        newFoodName: newFoodName
-      })
-    }
+  // Delete ticket
+  const deleteTicket = (id) => {
+    Axios.delete("http://localhost:3001/delete/${id}");
+  };
 
   return (
     <div className="App">
-        <h1>CRUD App with MERN</h1>
-        <label>Food Name:</label>
-        <input type="text" onChange={(event)=>{setFoodName(event.target.value)}}/>
-        <label>Days Since You Ate It</label>
-        <input type="number" onChange={(event)=>{setDays(event.target.value)}}/>
-        <button onClick={addToList}>Add to List</button>
-        
-        <h1>FoodList</h1>
-        {foodList.map((val, key)=>{
-          return(
-            <div className="food" key={key}>
-              <h1>{val.foodName}</h1> 
-              <h1>{val.daysSinceIAte}</h1>{" "}
-              <input 
-                type="text" 
-                placeholder="New food name..." 
-                onChange={(event)=>{setNewFoodName(event.target.value)}} 
-              />
-              <button onClick={()=>updateFood(val._id)}>Update</button>
-              <button onClick={()=>deleteFood(val._id)}>Delete</button>
-            </div>
-          )
-        })}
+      <h1>Customer Support Ticket System</h1>
+
+      {/* Form to add a new ticket */}
+      <label>Ticket Title:</label>
+      <input
+        type="text"
+        onChange={(event) => setTicketTitle(event.target.value)}
+      />
+      <label>Description:</label>
+      <input
+        type="text"
+        onChange={(event) => setDescription(event.target.value)}
+      />
+      <label>Status:</label>
+      <input
+        type="text"
+        onChange={(event) => setStatus(event.target.value)}
+      />
+      <button onClick={addTicket}>Add Ticket</button>
+
+      {/* Displaying the list of tickets */}
+      <h2>Ticket List</h2>
+      {ticketList.map((ticket) => {
+        return (
+          <div className="ticket" key={ticket._id}>
+            <h3>{ticket.ticketTitle}</h3>
+            <p>{ticket.description}</p>
+            <p>Status: {ticket.status}</p>
+            <input
+              type="text"
+              placeholder="New ticket title..."
+              onChange={(event) => setNewTicketTitle(event.target.value)}
+            />
+            <button onClick={() => updateTicket(ticket._id)}>Update</button>
+            <button onClick={() => deleteTicket(ticket._id)}>Delete</button>
+          </div>
+        );
+      })}
     </div>
   );
 }

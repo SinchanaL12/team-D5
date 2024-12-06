@@ -1,21 +1,92 @@
-.App{
+.App {
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  font-family: Arial, sans-serif;
 }
 
-input, button{
-  width: 200px;
-  height: 30px;
-  font-size: 20px;
+h1, h2 {
+  color: #4CAF50;
+}
+
+h3 {
+  color: #333;
+}
+
+input, button {
+  width: 250px;
+  height: 35px;
+  margin: 10px 0;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid #4CAF50;
+}
+
+button:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.ticket {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 15px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.ticket p {
+  font-size: 14px;
+  color: #555;
+}
+
+.ticket button {
+  width: 100px;
+  margin-top: 10px;
+  cursor: pointer;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.ticket button:first-of-type {
+  background-color: #008CBA;
+}
+
+.ticket button:hover {
+  background-color: #555;
+}
+
+.ticket input {
+  margin-top: 10px;
+  width: 100%;
+}
+
+label {
+  font-size: 16px;
+  color: #333;
   margin: 5px;
-}
-
-.food{
-  width: 500px;
-  height: 250px;
-  border: 2px solid black;
-  margin: 10px;
 }

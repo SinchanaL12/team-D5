@@ -1,63 +1,71 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const app = express()
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
 
-require('dotenv').config()
+require('dotenv').config();
 
-const FoodModel = require('./models/Food')
+const TicketModel = require('./server/models/Ticket');
 
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(cors());
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
-//console.log(process.env.MongoDB_URL)
-mongoose.connect('mongodb+srv://root:root1@cluster0.dkqn9.mongodb.net/')
+mongoose.connect("mongodb+srv://abc:abc1@cluster0.690nh.mongodb.net/ticketDB");
 
-app.post('/insert', async (req,res)=>{
-    const foodName = req.body.foodName
-    const days = req.body.days
-    const food = new FoodModel({foodName:foodName, daysSinceIAte: days})
-    try{
-        await food.save()
-        res.send("inserted data")
-    }catch(err){
-        console.log(err);
-    }
-})
-app.get('/read', async (req,res)=>{
-       try{
-        const result = await FoodModel.find({})
-        res.send(result)
-       }catch{
+app.post('/insert', async (req, res) => {
+  const { ticketTitle, description, status } = req.body;
+  const ticket = new TicketModel({
+    ticketTitle,
+    description,
+    status,
+  });
 
-       }
-   })
-app.put('/update', async (req,res)=>{
-    const newFoodName = req.body.newFoodName
-    const id = req.body.id
+  try {
+    await ticket.save();
+    res.send('Ticket inserted');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error inserting ticket');
+  }
+});
 
-    try{
-        const updatedFood = await FoodModel.findById(id)
-        updatedFood.foodName = newFoodName
-        updatedFood.save();
-        
-    }catch(err){
-        console.log(err);
-    }
-})
+app.get('/read', async (req, res) => {
+  try {
+    const result = await TicketModel.find({});
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error fetching tickets');
+  }
+});
 
-app.delete('/delete/:id', async(req,res)=>{
-    try{
-        const id = req.params.id
-        await FoodModel.findByIdAndDelete(id)
-        res.send("deleted")
-    }catch{
+app.put('/update', async (req, res) => {
+  const { id, newTicketTitle } = req.body;
 
-    }
-})
+  try {
+    const updatedTicket = await TicketModel.findById(id);
+    updatedTicket.ticketTitle = newTicketTitle;
+    await updatedTicket.save();
+    res.send('Ticket updated');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error updating ticket');
+  }
+});
 
-app.listen(PORT,()=>{
-    console.log(`server running in port ${PORT}`)
-})
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    await TicketModel.findByIdAndDelete(id);
+    res.send('Ticket deleted');
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error deleting ticket');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
